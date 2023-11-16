@@ -1,6 +1,11 @@
 name: Industrialisation continue sur le serveur AWS (Tomcat)
 on: push
 jobs:
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
   Deploy:
     name: Deploy
     runs-on: ubuntu-latest
@@ -17,3 +22,8 @@ jobs:
         port: ${{ secrets.DEPLOY_PORT }}
         source: "MARIN.war"
         target: "/opt/tomcat/webapps"
+        fetch-depth: 0  # Shallow clones should be disabled for a better relevancy of analysis
+    - uses: sonarsource/sonarqube-scan-action@master
+      env:
+        SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+        SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
